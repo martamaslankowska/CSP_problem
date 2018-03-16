@@ -1,13 +1,16 @@
 class Variable:
-    def __init__(self):
-        self.value = 0
+    count = 0
 
-    def __init__(self, val):
-        self.value = val
+    def __init__(self, val=0):
+        Variable.count += 1
+        self.value = Variable.count
+        self.color = "#FFFFAA"
 
     def get_value(self):
         print("Value of this variable is:", self.value)
         return self.value
+
+
 
 
 
