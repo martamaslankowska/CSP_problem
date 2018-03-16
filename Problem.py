@@ -19,29 +19,32 @@ class Problem:
     def check_constraints(self, variable):
         print("\nVariable value:", variable.value)
         variable.color = get_color(7)
+        satisfies = True
         for c in self.constraints:
             c.current_variable(variable)
-            satisfies = c.satisfies(self.matrix)
-            print(c.__class__.__name__, '--> satisfies?', satisfies)
+            sat = c.satisfies(self.matrix)
+            if satisfies and not sat:
+                satisfies = False
+            print(c.__class__.__name__, '--> satisfies?', sat)
+        # draw_matrix(self.matrix)
+        return satisfies
+
+    def backtracking(self):
+        self.backtrack(self.variables)
         draw_matrix(self.matrix)
 
-    def fill_matrix_backtrack(self):
-        domain = self.variables[0].domain
-        for i in range(self.N):
-            for j in range(self.N):
-                var = self.matrix[i][j]
-                d = domain[0]
-                satisfies = False
-                print('\nVariable ({0},{1})'.format(i,j))
-                while d <= (max(domain)+1) and not satisfies:
-                    var.value = d
-                    print("  current value =", d)
-                    for c in self.constraints:
-                        c.current_variable(var)
-                        satisfies = c.satisfies(self.matrix)
-                        print("    ", c.__class__.__name__, '--> satisfies?', satisfies)
-                        if not satisfies:
-                            # d = domain[domain.index(d)+1]
-                            d += 1
-                            break
-        draw_matrix(self.matrix)
+    def backtrack(self, var_free):
+        if len(var_free) == 0:
+            return True
+        else:
+            variable = var_free[0]
+            for i in variable.domain:
+                variable.value = i
+                if self.check_constraints(variable):
+                    result = self.backtrack(var_free[1:])
+                    if result:
+                        return result
+            variable.value = 0
+            return False;
+
+

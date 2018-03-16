@@ -28,10 +28,12 @@ constraints.append(RowEqualityConstraint())
 constraints.append(ColumnEqualityConstraint())
 
 square = Problem(board, variables, constraints)
+
+square.backtracking()
+
 # variables[1].value = 30
-# board[2][1].value = 30
-# square.check_constraints(variables[1])
+# board[0][2].value = 30
+# print('Result:', square.check_constraints(variables[1]))
 
-square.fill_matrix_backtrack()
-
+# square.fill_matrix_backtrack()
 
