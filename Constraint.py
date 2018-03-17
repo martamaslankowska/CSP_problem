@@ -64,35 +64,35 @@ class AdjacentNeighboursConstraint(BaseConstraint):
         row = self.variable.i
         col = self.variable.j
         satisfies = True
-        self.variable.color = get_color(7)
+        # self.variable.color = get_color(7)
 
         if 0 < row:  # upper neighbour
             if abs(self.variable.value - matrix[row-1][col].value) < 2:
                 satisfies = False
-                matrix[row - 1][col].color = get_color(1)
-            else:
-                matrix[row - 1][col].color = get_color(6)
+            #     matrix[row - 1][col].color = get_color(1)
+            # else:
+            #     matrix[row - 1][col].color = get_color(6)
 
         if row < (N-1):  # lower neighbour
             if abs(self.variable.value - matrix[row+1][col].value) < 2:
                 satisfies = False
-                matrix[row + 1][col].color = get_color(1)
-            else:
-                matrix[row + 1][col].color = get_color(6)
+            #     matrix[row + 1][col].color = get_color(1)
+            # else:
+            #     matrix[row + 1][col].color = get_color(6)
 
         if 0 < col:  # left neighbour
             if abs(self.variable.value - matrix[row][col-1].value) < 2:
                 satisfies = False
-                matrix[row][col - 1].color = get_color(1)
-            else:
-                matrix[row][col - 1].color = get_color(6)
+            #     matrix[row][col - 1].color = get_color(1)
+            # else:
+            #     matrix[row][col - 1].color = get_color(6)
 
         if col < (N-1):  # right neighbour
             if abs(self.variable.value - matrix[row][col+1].value) < 2:
                 satisfies = False
-                matrix[row][col + 1].color = get_color(1)
-            else:
-                matrix[row][col + 1].color = get_color(6)
+            #     matrix[row][col + 1].color = get_color(1)
+            # else:
+            #     matrix[row][col + 1].color = get_color(6)
 
         return satisfies
 
@@ -106,35 +106,35 @@ class DiagonalNeighboursConstraint(BaseConstraint):
         row = self.variable.i
         col = self.variable.j
         satisfies = True
-        self.variable.color = get_color(7)
+        # self.variable.color = get_color(7)
 
         if 0 < row and 0 < col:  # upper left neighbour
             if abs(self.variable.value - matrix[row-1][col-1].value) < 1:
                 satisfies = False
-                matrix[row - 1][col - 1].color = get_color(1)
-            else:
-                matrix[row - 1][col - 1].color = get_color(6)
+            #     matrix[row - 1][col - 1].color = get_color(1)
+            # else:
+            #     matrix[row - 1][col - 1].color = get_color(6)
 
         if row < (N-1) and 0 < col:  # lower left neighbour
             if abs(self.variable.value - matrix[row+1][col-1].value) < 1:
                 satisfies = False
-                matrix[row + 1][col - 1].color = get_color(1)
-            else:
-                matrix[row + 1][col - 1].color = get_color(6)
+            #     matrix[row + 1][col - 1].color = get_color(1)
+            # else:
+            #     matrix[row + 1][col - 1].color = get_color(6)
 
         if 0 < row and col < (N-1):  # upper right neighbour
             if abs(self.variable.value - matrix[row-1][col+1].value) < 1:
                 satisfies = False
-                matrix[row - 1][col + 1].color = get_color(1)
-            else:
-                matrix[row - 1][col + 1].color = get_color(6)
+            #     matrix[row - 1][col + 1].color = get_color(1)
+            # else:
+            #     matrix[row - 1][col + 1].color = get_color(6)
 
         if row < (N-1) and col < (N-1):  # lower right neighbour
             if abs(self.variable.value - matrix[row+1][col+1].value) < 1:
                 satisfies = False
-                matrix[row + 1][col + 1].color = get_color(1)
-            else:
-                matrix[row + 1][col + 1].color = get_color(6)
+            #     matrix[row + 1][col + 1].color = get_color(1)
+            # else:
+            #     matrix[row + 1][col + 1].color = get_color(6)
 
         return satisfies
 
@@ -149,34 +149,34 @@ class NonAdjacentNeighboursConstraint(BaseConstraint):
         row = self.variable.i
         col = self.variable.j
         satisfies = True
-        self.variable.color = get_color(7)
+        # self.variable.color = get_color(7)
 
         if 1 < row:  # upper neighbour
             if abs(self.variable.value - matrix[row-2][col].value) < 1:
                 satisfies = False
-                matrix[row - 2][col].color = get_color(1)
-            else:
-                matrix[row - 2][col].color = get_color(6)
+            #     matrix[row - 2][col].color = get_color(1)
+            # else:
+            #     matrix[row - 2][col].color = get_color(6)
 
         if row < (N-2):  # lower neighbour
             if abs(self.variable.value - matrix[row+2][col].value) < 1:
                 satisfies = False
-                matrix[row + 2][col].color = get_color(1)
-            else:
-                matrix[row + 2][col].color = get_color(6)
+            #     matrix[row + 2][col].color = get_color(1)
+            # else:
+            #     matrix[row + 2][col].color = get_color(6)
 
         if 1 < col:  # left neighbour
             if abs(self.variable.value - matrix[row][col-2].value) < 1:
                 satisfies = False
-                matrix[row][col - 2].color = get_color(1)
-            else:
-                matrix[row][col - 2].color = get_color(6)
+            #     matrix[row][col - 2].color = get_color(1)
+            # else:
+            #     matrix[row][col - 2].color = get_color(6)
 
         if col < (N-2):  # right neighbour
             if abs(self.variable.value - matrix[row][col+2].value) < 1:
                 satisfies = False
-                matrix[row][col + 2].color = get_color(1)
-            else:
-                matrix[row][col + 2].color = get_color(6)
+            #     matrix[row][col + 2].color = get_color(1)
+            # else:
+            #     matrix[row][col + 2].color = get_color(6)
 
         return satisfies

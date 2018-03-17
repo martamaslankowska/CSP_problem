@@ -22,7 +22,7 @@ def get_color(enum_col):
     return my_colors[enum_col]
 
 
-def draw_matrix(board):
+def draw_matrix(board, colors=0):
     N = board.shape[0]
     row, col = N, N
     matrix = np.zeros(shape=(row, col), dtype=int)
@@ -43,11 +43,12 @@ def draw_matrix(board):
         cell.set_height(1.0/row)
         cell.set_width(1.0/col)
 
+    if colors > 0:
+        plt.title("number of colors = {}".format(colors))
+
     ax = plt.gca()
     ax.set_xticks([])
     ax.set_yticks([])
-
-    # tb._cells[(1, 0)].set_facecolor(get_color(1))
 
     plt.show()
 

@@ -30,8 +30,23 @@ class Problem:
         return satisfies
 
     def backtracking(self):
-        self.backtrack(self.variables)
-        draw_matrix(self.matrix)
+        result, graph = False, False
+        while not result:
+            result = self.backtrack(self.variables)
+            # changing domain size for L(2,1) coloring
+            if not result:
+                graph = True
+                domain = self.variables[0].domain
+                domain += [max(domain) + 1]
+
+        #  drawing matrix with adjusted colors and title
+        if graph:
+            for v in self.variables:
+                v.color = get_color(v.value)
+            draw_matrix(self.matrix, len(domain))
+        else:
+            draw_matrix(self.matrix)
+        return len(domain)
 
     def backtrack(self, var_free):
         if len(var_free) == 0:
@@ -44,7 +59,7 @@ class Problem:
                     result = self.backtrack(var_free[1:])
                     if result:
                         return result
-            variable.value = 0
+            variable.value = -1
             return False;
 
 
