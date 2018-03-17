@@ -6,18 +6,6 @@ from Variable import Variable
 my_colors = ["#FFFFAA", "#FF5858", "#E57BAD", "#AC7BD8", "#83B0FC", "#83FCE4", "#97F276", "#FFFA55", "#FFB055"]
 
 
-# from enum import Enum
-# class Color(Enum):
-#     RED = 1
-#     PINK = 2
-#     VIOLET = 3
-#     BLUE = 4
-#     AQUA = 5
-#     GREEN = 6
-#     YELLOW = 7
-#     ORANGE = 8
-
-
 def get_color(enum_col):
     return my_colors[enum_col]
 

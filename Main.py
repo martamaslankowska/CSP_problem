@@ -27,14 +27,16 @@ def backtracking(problem_type, n):
     problem = Problem(matrix, variables, constraints)
     problem.backtracking()
 
+# backtracking('graph', 8)
 
 
 
-N = 5
+N = 4
 matrix = np.empty(shape=(N, N), dtype=object)
 variables = []
-constraints = [RowEqualityConstraint(), ColumnEqualityConstraint()]
-domain = list(range(1, N + 1))
+# constraints = [RowEqualityConstraint(), ColumnEqualityConstraint()]
+constraints = [AdjacentNeighboursConstraint(), DiagonalNeighboursConstraint(), NonAdjacentNeighboursConstraint()]
+domain = list(range(1, 8))
 
 index = 0
 for i in range(N):
@@ -47,14 +49,16 @@ problem = Problem(matrix, variables, constraints)
 print(problem.forward_checking())
 
 
-# var = matrix[2][1]
-# matrix[2][3].domain = []
+
+# var = matrix[3][2]
 # var.value = 3
-# print('\nResult:', problem.adjust_domains(var))
 #
-# var.get_domain()
-# matrix[2][3].get_domain()
-# matrix[2][2].get_domain()
+# constr = NonAdjacentNeighboursConstraint()
+# constr.current_variable(var)
+# a = constr.adjust_domains(matrix)
+# print(a)
+# draw_matrix(matrix)
+
 
 
 

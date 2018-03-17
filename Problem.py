@@ -62,8 +62,6 @@ class Problem:
         adjust_domains(), check_if_any_empty_domains() 
         forward_checking() and recursive forward_check() '''
 
-    # returns True if everything is all right
-    # returns False if there is an empty domain somewhere and fixes last changed domains
     def adjust_domains(self, variable):
         changed_variables = []
         for c in self.constraints:
@@ -78,12 +76,16 @@ class Problem:
         if self.check_if_any_empty_domains():
             print('  DOMAINS ARE EMPTY...............................')
             print('  Fixing changed domains:')
-            for var in changed_variables:
-                var.domain += [variable.value]
-                print('    ({0},{1}) --> {2}'.format(var.i, var.j, var.domain))
+            self.fix_empty_domains(changed_variables, variable)
             draw_matrix(self.matrix)
-            return False
-        return True
+            return False, []
+        return True, changed_variables
+
+    def fix_empty_domains(self, changed_variables, variable):
+        for var in changed_variables:
+            var.domain += [variable.value]
+            var.domain.sort()
+            print('    ({0},{1}) --> {2}'.format(var.i, var.j, var.domain))
 
     def check_if_any_empty_domains(self):
         for i in range(self.N):
@@ -104,9 +106,11 @@ class Problem:
             variable = var_free[0]
             for i in variable.domain:
                 variable.value = i
-                if self.adjust_domains(variable):
+                found_empty_domains, changed_variables = self.adjust_domains(variable)
+                if found_empty_domains:
                     result = self.forward_check(var_free[1:])
                     if result:
                         return result
+                    self.fix_empty_domains(changed_variables, variable)
             variable.value = -1
             return False;
