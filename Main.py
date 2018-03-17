@@ -1,12 +1,14 @@
 import numpy as np
 from Problem import *
 import copy as c
+import time
 
 
-#  default problem is latin square
-def backtracking(problem_type, n):
+# default problem is latin square --> square / graph
+# default algorithm is backtracking --> back / forward
+def algorithm(problem_type, algorithm_type, n):
     N = n
-    matrix = np.empty(shape=(N,N), dtype=object)
+    matrix = np.empty(shape=(N, N), dtype=object)
     variables = []
     constraints = []
 
@@ -25,43 +27,34 @@ def backtracking(problem_type, n):
             index += 1
 
     problem = Problem(matrix, variables, constraints)
-    problem.backtracking()
-
-# backtracking('graph', 8)
-
-
-
-N = 4
-matrix = np.empty(shape=(N, N), dtype=object)
-variables = []
-# constraints = [RowEqualityConstraint(), ColumnEqualityConstraint()]
-constraints = [AdjacentNeighboursConstraint(), DiagonalNeighboursConstraint(), NonAdjacentNeighboursConstraint()]
-domain = list(range(1, 8))
-
-index = 0
-for i in range(N):
-    for j in range(N):
-        variables.append(Variable(i, j, c.copy(domain)))
-        matrix[i][j] = variables[index]
-        index += 1
-
-problem = Problem(matrix, variables, constraints)
-print(problem.forward_checking())
+    if algorithm_type == 'forward':
+        problem.forward_checking()
+    else:
+        problem.backtracking()
 
 
+problem_type = 'square'  # or 'graph'
+algorithm_type = 'back'  # or 'forward'
+N = 5
+nr_of_tests = 2
 
-# var = matrix[3][2]
-# var.value = 3
-#
-# constr = NonAdjacentNeighboursConstraint()
-# constr.current_variable(var)
-# a = constr.adjust_domains(matrix)
-# print(a)
-# draw_matrix(matrix)
+file_name = problem_type + '_' + algorithm_type + '_N' + str(N) + '_' + str(nr_of_tests) + '.txt'
+result = []
+
+for i in range(nr_of_tests):
+    start = time.time()
+    algorithm(problem_type, algorithm_type, N)
+    stop = time.time()
+    t = stop - start
+    result += [str(t)]
+
+file_output = open(file_name, 'w+')
+file_output.write('\n'.join(result))
 
 
+files = []
+draw_chart(problem_type, algorithm_type, files)
 
-
-
-
-
+a = np.array([2,3,2,3,2,3])
+print(np.average(a))
+print(np.std(a))

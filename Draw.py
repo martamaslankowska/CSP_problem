@@ -1,7 +1,5 @@
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
-from Variable import Variable
 
 my_colors = ["#FFFFAA", "#FF5858", "#E57BAD", "#AC7BD8", "#83B0FC", "#83FCE4", "#97F276", "#FFFA55", "#FFB055"]
 
@@ -41,3 +39,16 @@ def draw_matrix(board, colors=0):
     plt.show()
 
 
+def draw_chart(problem_type, algorithm_type, files):
+
+    for f in files:
+        avg = np.average(f)
+
+
+    x = np.array([1, 2, 3, 4, 5])
+    y = np.power(x, 2)  # Effectively y = x**2
+    e = np.array([0.5, 2.6, 3.7, 4.6, 5.5])
+
+    plt.errorbar(x, y, e, linestyle='None', marker='^')
+
+    plt.show()

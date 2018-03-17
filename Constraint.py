@@ -1,5 +1,6 @@
 from Variable import Variable
 from Draw import *
+import copy
 
 
 class BaseConstraint:
@@ -48,7 +49,7 @@ class RowEqualityConstraint(BaseConstraint):
             if j != col:
                 try:
                     matrix[row][j].domain.remove(val)
-                    changed_variables += [matrix[row][j]]
+                    changed_variables += [(matrix[row][j], val)]
                 except:
                     pass
                 # matrix[row][j].color = get_color(5)
@@ -88,7 +89,7 @@ class ColumnEqualityConstraint(BaseConstraint):
             if i != row:
                 try:
                     matrix[i][col].domain.remove(val)
-                    changed_variables += [matrix[i][col]]
+                    changed_variables += [(matrix[i][col], val)]
                 except:
                     pass
                 # matrix[i][col].color = get_color(5)
@@ -145,45 +146,32 @@ class AdjacentNeighboursConstraint(BaseConstraint):
         row = self.variable.i
         col = self.variable.j
         changed_variables = []
-        # print('My current variable is ({0},{1}) with value {2} and domian = {3}'.format(row, col, self.variable.value, self.variable.domain))
-        # self.variable.color = get_color(7)
 
         if 0 < row:  # upper neighbour
             var = matrix[row - 1][col]
-            tmp = len(var.domain)
-            var.domain = [el for el in var.domain if abs(self.variable.value - el) >= 2]
-            if tmp != len(var.domain):
-                changed_variables += [var]
-            # print("Changed domain of element ({0},{1}):".format(var.i, var.j), var.domain)
-            # var.color = get_color(5)
+            self.adjust(changed_variables, var)
 
         if row < (N - 1):  # lower neighbour
             var = matrix[row + 1][col]
-            tmp = len(var.domain)
-            var.domain = [el for el in var.domain if abs(self.variable.value - el) >= 2]
-            if tmp != len(var.domain):
-                changed_variables += [var]
-            # print("Changed domain of element ({0},{1}):".format(var.i, var.j), var.domain)
-            # var.color = get_color(5)
+            self.adjust(changed_variables, var)
 
         if 0 < col:  # left neighbour
             var = matrix[row][col - 1]
-            tmp = len(var.domain)
-            var.domain = [el for el in var.domain if abs(self.variable.value - el) >= 2]
-            if tmp != len(var.domain):
-                changed_variables += [var]
-            # print("Changed domain of element ({0},{1}):".format(var.i, var.j), var.domain)
-            # var.color = get_color(5)
+            self.adjust(changed_variables, var)
 
         if col < (N - 1):  # right neighbour
             var = matrix[row][col + 1]
-            tmp = len(var.domain)
-            var.domain = [el for el in var.domain if abs(self.variable.value - el) >= 2]
-            if tmp != len(var.domain):
-                changed_variables += [var]
-            # print("Changed domain of element ({0},{1}):".format(var.i, var.j), var.domain)
-            # var.color = get_color(5)
+            self.adjust(changed_variables, var)
 
+        return changed_variables
+
+    def adjust(self, changed_variables, var):
+        old_domain = copy.copy(var.domain)
+        var.domain = [el for el in var.domain if abs(self.variable.value - el) >= 2]
+        changed_values = [el for el in old_domain if abs(self.variable.value - el) < 2]
+        if len(changed_values) > 0:
+            for cv in changed_values:
+                changed_variables += [(var, cv)]
         return changed_variables
 
 
@@ -233,45 +221,32 @@ class DiagonalNeighboursConstraint(BaseConstraint):
         row = self.variable.i
         col = self.variable.j
         changed_variables = []
-        # print('My current variable is ({0},{1}) with value {2} and domian = {3}'.format(row, col, self.variable.value, self.variable.domain))
-        # self.variable.color = get_color(7)
 
         if 0 < row and 0 < col:  # upper left neighbour
             var = matrix[row - 1][col - 1]
-            tmp = len(var.domain)
-            var.domain = [el for el in var.domain if abs(self.variable.value - el) >= 1]
-            if tmp != len(var.domain):
-                changed_variables += [var]
-            # print("Changed domain of element ({0},{1}):".format(var.i, var.j), var.domain)
-            # var.color = get_color(5)
+            self.adjust(changed_variables, var)
 
         if row < (N-1) and 0 < col:  # lower left neighbour
             var = matrix[row + 1][col - 1]
-            tmp = len(var.domain)
-            var.domain = [el for el in var.domain if abs(self.variable.value - el) >= 1]
-            if tmp != len(var.domain):
-                changed_variables += [var]
-            # print("Changed domain of element ({0},{1}):".format(var.i, var.j), var.domain)
-            # var.color = get_color(5)
+            self.adjust(changed_variables, var)
 
         if 0 < row and col < (N-1):  # upper right neighbour
             var = matrix[row - 1][col + 1]
-            tmp = len(var.domain)
-            var.domain = [el for el in var.domain if abs(self.variable.value - el) >= 1]
-            if tmp != len(var.domain):
-                changed_variables += [var]
-            # print("Changed domain of element ({0},{1}):".format(var.i, var.j), var.domain)
-            # var.color = get_color(5)
+            self.adjust(changed_variables, var)
 
         if row < (N-1) and col < (N-1):  # lower right neighbour
             var = matrix[row + 1][col + 1]
-            tmp = len(var.domain)
-            var.domain = [el for el in var.domain if abs(self.variable.value - el) >= 1]
-            if tmp != len(var.domain):
-                changed_variables += [var]
-            # print("Changed domain of element ({0},{1}):".format(var.i, var.j), var.domain)
-            # var.color = get_color(5)
+            self.adjust(changed_variables, var)
 
+        return changed_variables
+
+    def adjust(self, changed_variables, var):
+        old_domain = copy.copy(var.domain)
+        var.domain = [el for el in var.domain if abs(self.variable.value - el) >= 1]
+        changed_values = [el for el in old_domain if abs(self.variable.value - el) < 1]
+        if len(changed_values) > 0:
+            for cv in changed_values:
+                changed_variables += [(var, cv)]
         return changed_variables
 
 
@@ -321,43 +296,30 @@ class NonAdjacentNeighboursConstraint(BaseConstraint):
         row = self.variable.i
         col = self.variable.j
         changed_variables = []
-        # print('My current variable is ({0},{1}) with value {2} and domian = {3}'.format(row, col, self.variable.value, self.variable.domain))
-        # self.variable.color = get_color(7)
 
         if 1 < row:  # upper neighbour
             var = matrix[row - 2][col]
-            tmp = len(var.domain)
-            var.domain = [el for el in var.domain if abs(self.variable.value - el) >= 1]
-            if tmp != len(var.domain):
-                changed_variables += [var]
-            # print("Changed domain of element ({0},{1}):".format(var.i, var.j), var.domain)
-            # var.color = get_color(5)
+            self.adjust(changed_variables, var)
 
         if row < (N - 2):  # lower neighbour
             var = matrix[row + 2][col]
-            tmp = len(var.domain)
-            var.domain = [el for el in var.domain if abs(self.variable.value - el) >= 1]
-            if tmp != len(var.domain):
-                changed_variables += [var]
-            # print("Changed domain of element ({0},{1}):".format(var.i, var.j), var.domain)
-            # var.color = get_color(5)
+            self.adjust(changed_variables, var)
 
         if 1 < col:  # left neighbour
             var = matrix[row][col - 2]
-            tmp = len(var.domain)
-            var.domain = [el for el in var.domain if abs(self.variable.value - el) >= 1]
-            if tmp != len(var.domain):
-                changed_variables += [var]
-            # print("Changed domain of element ({0},{1}):".format(var.i, var.j), var.domain)
-            # var.color = get_color(5)
+            self.adjust(changed_variables, var)
 
         if col < (N - 2):  # right neighbour
             var = matrix[row][col + 2]
-            tmp = len(var.domain)
-            var.domain = [el for el in var.domain if abs(self.variable.value - el) >= 1]
-            if tmp != len(var.domain):
-                changed_variables += [var]
-            # print("Changed domain of element ({0},{1}):".format(var.i, var.j), var.domain)
-            # var.color = get_color(5)
+            self.adjust(changed_variables, var)
 
+        return changed_variables
+
+    def adjust(self, changed_variables, var):
+        old_domain = copy.copy(var.domain)
+        var.domain = [el for el in var.domain if abs(self.variable.value - el) >= 1]
+        changed_values = [el for el in old_domain if abs(self.variable.value - el) < 1]
+        if len(changed_values) > 0:
+            for cv in changed_values:
+                changed_variables += [(var, cv)]
         return changed_variables

@@ -15,7 +15,7 @@ class Variable:
         return self.value
 
     def get_domain(self):
-        print("Domain of variable ({0},{1}) is:".format(self.i,self.j), self.domain)
+        print("Domain of variable ({0},{1}) is:".format(self.i, self.j), self.domain)
 
 
 
