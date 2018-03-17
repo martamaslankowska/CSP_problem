@@ -10,15 +10,11 @@ class Problem:
         self.variables = var
         self.N = matrix.shape[0]
 
-
-    def print_values(self):
-        for i in range(self.N):
-            for j in range(self.N):
-                print('On ({0},{1}) we have value:'.format(i,j), self.matrix[i][j].value)
+    ''' BACKTRACKING 
+        check_constraints(), backtracking() and recursive backtrack() '''
 
     def check_constraints(self, variable):
         print("\nVariable ({0},{1}) value:".format(variable.i, variable.j), variable.value)
-        # variable.color = get_color(7)
         satisfies = True
         for c in self.constraints:
             c.current_variable(variable)
@@ -26,7 +22,6 @@ class Problem:
             if satisfies and not sat:
                 satisfies = False
             print(c.__class__.__name__, '--> satisfies?', sat)
-        # draw_matrix(self.matrix)
         return satisfies
 
     def backtracking(self):
@@ -36,8 +31,9 @@ class Problem:
             # changing domain size for L(2,1) coloring
             if not result:
                 graph = True
-                domain = self.variables[0].domain
-                domain += [max(domain) + 1]
+                for v in self.variables:
+                    domain = v.domain
+                    domain += [max(domain) + 1]
 
         #  drawing matrix with adjusted colors and title
         if graph:
@@ -46,7 +42,7 @@ class Problem:
             draw_matrix(self.matrix, len(domain))
         else:
             draw_matrix(self.matrix)
-        return len(domain)
+        return result
 
     def backtrack(self, var_free):
         if len(var_free) == 0:
@@ -62,4 +58,55 @@ class Problem:
             variable.value = -1
             return False;
 
+    ''' FORWARD CHECKING
+        adjust_domains(), check_if_any_empty_domains() 
+        forward_checking() and recursive forward_check() '''
 
+    # returns True if everything is all right
+    # returns False if there is an empty domain somewhere and fixes last changed domains
+    def adjust_domains(self, variable):
+        changed_variables = []
+        for c in self.constraints:
+            c.current_variable(variable)
+            changed_variables += c.adjust_domains(self.matrix)
+
+        print('\nChanged domains for variable ({0},{1}) with value = {2} and domian = {3}'.format(variable.i, variable.j, variable.value, variable.domain))
+        for a in changed_variables:
+            print('  ({0},{1}) --> {2}'.format(a.i, a.j, a.domain))
+
+        # if there were empty domains, fix them and return False
+        if self.check_if_any_empty_domains():
+            print('  DOMAINS ARE EMPTY...............................')
+            print('  Fixing changed domains:')
+            for var in changed_variables:
+                var.domain += [variable.value]
+                print('    ({0},{1}) --> {2}'.format(var.i, var.j, var.domain))
+            draw_matrix(self.matrix)
+            return False
+        return True
+
+    def check_if_any_empty_domains(self):
+        for i in range(self.N):
+            for j in range(self.N):
+                if len(self.matrix[i][j].domain) == 0:
+                    return True
+        return False
+
+    def forward_checking(self):
+        result = self.forward_check(self.variables)
+        draw_matrix(self.matrix)
+        return result
+
+    def forward_check(self, var_free):
+        if len(var_free) == 0:
+            return True
+        else:
+            variable = var_free[0]
+            for i in variable.domain:
+                variable.value = i
+                if self.adjust_domains(variable):
+                    result = self.forward_check(var_free[1:])
+                    if result:
+                        return result
+            variable.value = -1
+            return False;

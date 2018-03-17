@@ -31,10 +31,32 @@ class RowEqualityConstraint(BaseConstraint):
         for j in range(N):  # checking all variables in a row
             if j != col:
                 if matrix[row][j].value == matrix[row][col].value:
-                    matrix[row][j].color = get_color(1)  # red color
+                    # matrix[row][j].color = get_color(1)  # red color
                     return False
-                matrix[row][j].color = get_color(0)  # light yellow color
+                # matrix[row][j].color = get_color(0)  # light yellow color
         return True
+
+    def adjust_domains(self, matrix):
+        N = matrix.shape[0]
+        row = self.variable.i
+        col = self.variable.j
+        val = self.variable.value
+        changed_variables = []
+
+        # print("\nDomains in row nr", row)
+        for j in range(N):  # checking all variables in a row
+            if j != col:
+                try:
+                    matrix[row][j].domain.remove(val)
+                    changed_variables += [matrix[row][j]]
+                except:
+                    pass
+                # matrix[row][j].color = get_color(5)
+            # else:
+            #     matrix[row][j].color = get_color(7)
+            # print("  {0}) ".format(j), matrix[row][j].domain)
+        # draw_matrix(matrix)
+        return changed_variables
 
 
 class ColumnEqualityConstraint(BaseConstraint):
@@ -49,10 +71,32 @@ class ColumnEqualityConstraint(BaseConstraint):
         for i in range(N):  # checking all variables in a row
             if i != row:
                 if matrix[i][col].value == matrix[row][col].value:
-                    matrix[i][col].color = get_color(1)  # red color
+                    # matrix[i][col].color = get_color(1)  # red color
                     return False
-                matrix[i][col].color = get_color(0)  # light good color
+                # matrix[i][col].color = get_color(0)  # light good color
         return True
+
+    def adjust_domains(self, matrix):
+        N = matrix.shape[0]
+        row = self.variable.i
+        col = self.variable.j
+        val = self.variable.value
+        changed_variables = []
+
+        # print("\nDomains in column nr", col)
+        for i in range(N):  # checking all variables in a row
+            if i != row:
+                try:
+                    matrix[i][col].domain.remove(val)
+                    changed_variables += [matrix[i][col]]
+                except:
+                    pass
+                # matrix[i][col].color = get_color(5)
+            # else:
+            #     matrix[i][col].color = get_color(7)
+            # print("  {0}) ".format(i), matrix[row][i].domain)
+        # draw_matrix(matrix)
+        return changed_variables
 
 
 class AdjacentNeighboursConstraint(BaseConstraint):
@@ -137,7 +181,6 @@ class DiagonalNeighboursConstraint(BaseConstraint):
             #     matrix[row + 1][col + 1].color = get_color(6)
 
         return satisfies
-
 
 
 class NonAdjacentNeighboursConstraint(BaseConstraint):
