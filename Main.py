@@ -1,39 +1,67 @@
-from Variable import Variable
-from Constraint import *
 import numpy as np
 from Draw import *
 from Problem import *
+import random
 
-N = 3
-board = np.empty(shape=(N,N), dtype=object)
-variables = []
-constraints = []
-domain = list(range(1,(N+1)))
+# LATIN SQUARE PROBLEM
+# N = 3
+# s_board = np.empty(shape=(N,N), dtype=object)
+# s_variables = []
+# s_constraints = []
+# s_domain = list(range(1,(N+1)))
+#
+# # filling matrix and list with empty variables
+# ind = 0
+# for i in range(N):
+#     for j in range(N):
+#         s_variables.append(Variable(i, j, s_domain))
+#         s_board[i][j] = s_variables[ind]
+#         ind += 1
+#
+# # filling list with constraints
+# s_constraints.append(RowEqualityConstraint())
+# s_constraints.append(ColumnEqualityConstraint())
+#
+# square = Problem(s_board, s_variables, s_constraints)
+# square.backtracking()
+
+
+
+# GRAPH COLOURING L(2,1)
+
+N = 6
+g_board = np.empty(shape=(N,N), dtype=object)
+g_variables = []
+g_constraints = []
+g_domain = list(range(1,(N+1)))
 
 # filling matrix and list with empty variables
 ind = 0
 for i in range(N):
     for j in range(N):
-        variables.append(Variable(i, j, domain))
-        board[i][j] = variables[ind]
+        g_variables.append(Variable(i, j, g_domain, random.randint(1,2*N)))
+        g_board[i][j] = g_variables[ind]
         ind += 1
 
-# drawing matrix
-# board[2][1].color = get_color(2)
-# board[1][2].value = 20
-# draw_matrix(board)
-
 # filling list with constraints
-constraints.append(RowEqualityConstraint())
-constraints.append(ColumnEqualityConstraint())
+g_constraints.append(AdjacentNeighboursConstraint())
+g_constraints.append(NonAdjacentNeighboursConstraint())
+g_constraints.append(DiagonalNeighboursConstraint())
 
-square = Problem(board, variables, constraints)
+graph = Problem(g_board, g_variables, g_constraints)
+# draw_matrix(graph.matrix)
 
-square.backtracking()
+graph.check_constraints(graph.matrix[3][2])
+draw_matrix(graph.matrix)
 
-# variables[1].value = 30
-# board[0][2].value = 30
-# print('Result:', square.check_constraints(variables[1]))
 
-# square.fill_matrix_backtrack()
+
+
+
+
+
+
+
+
+
 

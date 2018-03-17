@@ -17,8 +17,8 @@ class Problem:
                 print('On ({0},{1}) we have value:'.format(i,j), self.matrix[i][j].value)
 
     def check_constraints(self, variable):
-        print("\nVariable value:", variable.value)
-        variable.color = get_color(7)
+        print("\nVariable ({0},{1}) value:".format(variable.i, variable.j), variable.value)
+        # variable.color = get_color(7)
         satisfies = True
         for c in self.constraints:
             c.current_variable(variable)

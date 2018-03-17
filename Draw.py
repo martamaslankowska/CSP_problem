@@ -38,7 +38,6 @@ def draw_matrix(board):
         for j in range(col):
             tb._cells[(i, j)].set_facecolor(board[i][j].color)
 
-
     tc = tb.properties()['child_artists']
     for cell in tc:
         cell.set_height(1.0/row)
