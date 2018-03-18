@@ -5,7 +5,8 @@ import numpy.polynomial.polynomial as poly
 
 
 my_colors = ["#FFFFAA", "#FF5858", "#E57BAD", "#AC7BD8", "#83B0FC", "#83FCE4", "#97F276", "#FFFA55", "#FFB055"]
-
+# list of colors for graphs - (line color, error color)
+graph_colors = [('#0080FF', '#99CCFF'), ('#FF00FF', '#FF99FF'), ('#CC6600', 'FFB266'), ('#009900', '#AACD6D')]
 
 def get_color(enum_col):
     return my_colors[enum_col]
@@ -72,9 +73,21 @@ def draw_chart(problem_type, algorithm_type, files):
         e = np.asarray(e)
 
         if x.shape[0] > 0:
-            ax.errorbar(x, y, e, ecolor='#99CCFF', linestyle=':',
-                         label="val = {0} | var = {1}".format(val, var), color='#0080FF', marker='.')
+            ax.errorbar(x, y, e, ecolor=graph_colors[i][1], linestyle=':',
+                         label="val = {0} | var = {1}".format(val, var), color=graph_colors[i][0], marker='.')
             ax.legend(loc="upper left", shadow=True, title="Heuristics", fancybox=True)
+            plt.xlabel('size of matrix N')
+            plt.ylabel('time [seconds]')
+            plt.xticks(x)  # forces x axis to show only integers
+
+            if problem_type == 'square' and algorithm_type == 'back':
+                plt.title('Latin square with backtracking')
+            if problem_type == 'square' and algorithm_type == 'forward':
+                plt.title('Latin square with forward checking')
+            if problem_type == 'graph' and algorithm_type == 'back':
+                plt.title('L(2,1)-coloring with backtracking')
+            if problem_type == 'graph' and algorithm_type == 'forward':
+                plt.title('L(2,1)-coloring with forward checking')
 
     plt.show()
     plot_name = problem_type + '_' + algorithm_type + '_var' + str(var) + '.png'

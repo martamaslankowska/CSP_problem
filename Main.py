@@ -22,7 +22,7 @@ def algorithm(problem_type, algorithm_type, n, val, var):
 
     if problem_type == 'graph':
         constraints += [AdjacentNeighboursConstraint(), DiagonalNeighboursConstraint(), NonAdjacentNeighboursConstraint()]
-        domain = list(range(1, 3))
+        domain = list(range(1, 4))
     else:
         constraints += [RowEqualityConstraint(), ColumnEqualityConstraint()]
         domain = list(range(1, N+1))
@@ -45,7 +45,7 @@ def algorithm(problem_type, algorithm_type, n, val, var):
     else:
         res = problem.backtracking()
 
-    draw_matrix(matrix)
+    # draw_matrix(matrix)
     return res
 
 
@@ -80,23 +80,25 @@ def read_many_files(problem_type, algorithm_type, nr_of_tests, var):
     return all_files  # list of lists
 
 
+def run_many_algorithms(range_N, nr_of_tests):
+    for pt in problem_types:
+        for at in algorithm_types:
+            for N in range_N:
+                for val_heuristic in range(number_of_value_heuristics):
+                    for var_heuristic in range(number_of_value_heuristics):
+                        run_algorithm(pt, at, N, nr_of_tests, val_heuristic, var_heuristic)
+
+
 problem_types = ['square', 'graph']
 algorithm_types = ['back', 'forward']
 
-# problem_type = 'square'  # or 'graph'
-# algorithm_type = 'forward'  # or 'forward'
-# N = 5
+problem_type = problem_types[0]
+algorithm_type = algorithm_types[0]
+N = 5
 
 # algorithm(problem_type, algorithm_type, N, 0, 0)
 
-for pt in problem_types:
-    for at in algorithm_types:
-        for N in range(3,11):
-            for heuristic in range(number_of_value_heuristics):
-                run_algorithm(pt, at, N, 40, heuristic)
-
-
 # run_algorithm(problem_type, algorithm_type, N, 25)
-# files = read_many_files(problem_type, algorithm_type, 25, 0)
-# draw_chart(problem_type, algorithm_type, files)
+files = read_many_files(problem_type, algorithm_type, 30, 0)
+draw_chart(problem_type, algorithm_type, files)
 
