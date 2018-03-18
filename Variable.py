@@ -17,5 +17,8 @@ class Variable:
     def get_domain(self):
         print("Domain of variable ({0},{1}) is:".format(self.i, self.j), self.domain)
 
+    def get_number(self):
+        print("Number of variable ({0},{1}) is:".format(self.i, self.j), self.nr)
+
 
 
