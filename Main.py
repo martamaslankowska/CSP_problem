@@ -2,6 +2,8 @@ import numpy as np
 from Problem import *
 import copy as c
 import time
+import os
+import re
 
 
 # default problem is latin square --> square / graph
@@ -28,33 +30,37 @@ def algorithm(problem_type, algorithm_type, n):
 
     problem = Problem(matrix, variables, constraints)
     if algorithm_type == 'forward':
-        problem.forward_checking()
+        res = problem.forward_checking()
     else:
-        problem.backtracking()
+        res = problem.backtracking()
+    return res
 
 
 problem_type = 'square'  # or 'graph'
 algorithm_type = 'back'  # or 'forward'
-N = 5
-nr_of_tests = 2
+N = 3
+nr_of_tests = 20
 
-file_name = problem_type + '_' + algorithm_type + '_N' + str(N) + '_' + str(nr_of_tests) + '.txt'
-result = []
+file_name = problem_type + '_' + algorithm_type + '_N' \
+            + ('0' if N<10 else '') + str(N) + '_' + str(nr_of_tests) + '.txt'
+result = [str(N)]
 
 for i in range(nr_of_tests):
-    start = time.time()
+    start = time.perf_counter()
     algorithm(problem_type, algorithm_type, N)
-    stop = time.time()
-    t = stop - start
+    stop = time.perf_counter()
+    t = (stop - start)
+    print(t)
     result += [str(t)]
 
-file_output = open(file_name, 'w+')
-file_output.write('\n'.join(result))
+with open(file_name, 'w+') as file_output:
+    file_output.write('\n'.join(result))
 
 
-files = []
+matching_files = problem_type + '_' + algorithm_type + '.*' + str(nr_of_tests) + '.txt'
+files = [f for f in os.listdir('.') if re.match(matching_files, f)]
 draw_chart(problem_type, algorithm_type, files)
 
-a = np.array([2,3,2,3,2,3])
-print(np.average(a))
-print(np.std(a))
+# a = np.array([2,3,2,3,2,3])
+# print(np.average(a))
+# print(np.std(a))
